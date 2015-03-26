@@ -1,6 +1,6 @@
 {
   "name": "kevoree-commons",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "homepage": "https://github.com/kevoree/kevoree-js-commons",
   "authors": [
     "Maxime Tricoire <max.tricoire@gmail.com>"
@@ -8,8 +8,6 @@
   "description": "Kevoree JavaScript commons - Shared libraries/APIs",
   "main": "browser/kevoree-commons.js",
   "moduleType": [
-    "amd",
-    "globals",
     "node"
   ],
   "keywords": [
