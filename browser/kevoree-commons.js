@@ -1,4 +1,9 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.KevoreeCommons = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports.Resolver      = require('./lib/Resolver');
+module.exports.Bootstrapper  = require('./lib/Bootstrapper');
+module.exports.KevoreeLogger = require('./lib/KevoreeLogger');
+module.exports.FileSystem    = require('./lib/FileSystem');
+},{"./lib/Bootstrapper":2,"./lib/FileSystem":3,"./lib/KevoreeLogger":4,"./lib/Resolver":5}],2:[function(require,module,exports){
 var Class = require('pseudoclass');
 
 /**
@@ -95,7 +100,7 @@ var Bootstrapper = Class({
 });
 
 module.exports = Bootstrapper;
-},{"pseudoclass":10}],2:[function(require,module,exports){
+},{"pseudoclass":11}],3:[function(require,module,exports){
 var Class = require('pseudoclass');
 
 var FileSystem = Class({
@@ -131,7 +136,7 @@ var getBrowserFileSystem = function getBrowserFileSystem(fsapi, size, callback) 
 };
 
 module.exports = FileSystem;
-},{"pseudoclass":10}],3:[function(require,module,exports){
+},{"pseudoclass":11}],4:[function(require,module,exports){
 var Class  = require('pseudoclass'),
     chalk  = require('chalk');
 
@@ -245,7 +250,7 @@ KevoreeLogger.ERROR = LEVELS.indexOf('error');
 KevoreeLogger.QUIET = LEVELS.indexOf('quiet');
 
 module.exports = KevoreeLogger;
-},{"chalk":5,"pseudoclass":10}],4:[function(require,module,exports){
+},{"chalk":6,"pseudoclass":11}],5:[function(require,module,exports){
 var Class = require('pseudoclass'),
     KevoreeLogger = require('./KevoreeLogger');
 
@@ -278,7 +283,7 @@ var Resolver = Class({
 });
 
 module.exports = Resolver;
-},{"./KevoreeLogger":3,"pseudoclass":10}],5:[function(require,module,exports){
+},{"./KevoreeLogger":4,"pseudoclass":11}],6:[function(require,module,exports){
 'use strict';
 var ansi = require('ansi-styles');
 var stripAnsi = require('strip-ansi');
@@ -343,7 +348,7 @@ if (chalk.enabled === undefined) {
 	chalk.enabled = chalk.supportsColor;
 }
 
-},{"ansi-styles":6,"has-color":7,"strip-ansi":8}],6:[function(require,module,exports){
+},{"ansi-styles":7,"has-color":8,"strip-ansi":9}],7:[function(require,module,exports){
 'use strict';
 var styles = module.exports;
 
@@ -383,7 +388,7 @@ Object.keys(codes).forEach(function (key) {
 	style.close = '\x1b[' + val[1] + 'm';
 });
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (process){
 'use strict';
 module.exports = (function () {
@@ -419,13 +424,13 @@ module.exports = (function () {
 })();
 
 }).call(this,require('_process'))
-},{"_process":9}],8:[function(require,module,exports){
+},{"_process":10}],9:[function(require,module,exports){
 'use strict';
 module.exports = function (str) {
 	return typeof str === 'string' ? str.replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '') : str;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -485,7 +490,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /*
 	Class - JavaScript inheritance
 
@@ -815,9 +820,5 @@ process.umask = function() { return 0; };
 	}
 }(this));
 
-},{}],"kevoree-commons":[function(require,module,exports){
-module.exports.Resolver      = require('./lib/Resolver');
-module.exports.Bootstrapper  = require('./lib/Bootstrapper');
-module.exports.KevoreeLogger = require('./lib/KevoreeLogger');
-module.exports.FileSystem    = require('./lib/FileSystem');
-},{"./lib/Bootstrapper":1,"./lib/FileSystem":2,"./lib/KevoreeLogger":3,"./lib/Resolver":4}]},{},[]);
+},{}]},{},[1])(1)
+});
