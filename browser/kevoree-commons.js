@@ -100,7 +100,7 @@ var Bootstrapper = Class({
 });
 
 module.exports = Bootstrapper;
-},{"pseudoclass":11}],3:[function(require,module,exports){
+},{"pseudoclass":10}],3:[function(require,module,exports){
 var Class = require('pseudoclass');
 
 var FileSystem = Class({
@@ -136,7 +136,7 @@ var getBrowserFileSystem = function getBrowserFileSystem(fsapi, size, callback) 
 };
 
 module.exports = FileSystem;
-},{"pseudoclass":11}],4:[function(require,module,exports){
+},{"pseudoclass":10}],4:[function(require,module,exports){
 var Class  = require('pseudoclass'),
     chalk  = require('chalk');
 
@@ -250,7 +250,7 @@ KevoreeLogger.ERROR = LEVELS.indexOf('error');
 KevoreeLogger.QUIET = LEVELS.indexOf('quiet');
 
 module.exports = KevoreeLogger;
-},{"chalk":6,"pseudoclass":11}],5:[function(require,module,exports){
+},{"chalk":7,"pseudoclass":10}],5:[function(require,module,exports){
 var Class = require('pseudoclass'),
     KevoreeLogger = require('./KevoreeLogger');
 
@@ -278,12 +278,55 @@ var Resolver = Class({
     uninstall: function (deployUnit, force, callback) {},
 
     addRepository: function (url) {
-        if (this.repositories.indexOf(url) === -1) this.repositories.push(url);
+        if (this.repositories.indexOf(url) === -1) {
+            this.repositories.push(url);
+        }
     }
 });
 
 module.exports = Resolver;
-},{"./KevoreeLogger":4,"pseudoclass":11}],6:[function(require,module,exports){
+
+},{"./KevoreeLogger":4,"pseudoclass":10}],6:[function(require,module,exports){
+'use strict';
+var styles = module.exports;
+
+var codes = {
+	reset: [0, 0],
+
+	bold: [1, 22],
+	italic: [3, 23],
+	underline: [4, 24],
+	inverse: [7, 27],
+	strikethrough: [9, 29],
+
+	black: [30, 39],
+	red: [31, 39],
+	green: [32, 39],
+	yellow: [33, 39],
+	blue: [34, 39],
+	magenta: [35, 39],
+	cyan: [36, 39],
+	white: [37, 39],
+	gray: [90, 39],
+
+	bgBlack: [40, 49],
+	bgRed: [41, 49],
+	bgGreen: [42, 49],
+	bgYellow: [43, 49],
+	bgBlue: [44, 49],
+	bgMagenta: [45, 49],
+	bgCyan: [46, 49],
+	bgWhite: [47, 49]
+};
+
+Object.keys(codes).forEach(function (key) {
+	var val = codes[key];
+	var style = styles[key] = {};
+	style.open = '\x1b[' + val[0] + 'm';
+	style.close = '\x1b[' + val[1] + 'm';
+});
+
+},{}],7:[function(require,module,exports){
 'use strict';
 var ansi = require('ansi-styles');
 var stripAnsi = require('strip-ansi');
@@ -348,47 +391,7 @@ if (chalk.enabled === undefined) {
 	chalk.enabled = chalk.supportsColor;
 }
 
-},{"ansi-styles":7,"has-color":8,"strip-ansi":9}],7:[function(require,module,exports){
-'use strict';
-var styles = module.exports;
-
-var codes = {
-	reset: [0, 0],
-
-	bold: [1, 22],
-	italic: [3, 23],
-	underline: [4, 24],
-	inverse: [7, 27],
-	strikethrough: [9, 29],
-
-	black: [30, 39],
-	red: [31, 39],
-	green: [32, 39],
-	yellow: [33, 39],
-	blue: [34, 39],
-	magenta: [35, 39],
-	cyan: [36, 39],
-	white: [37, 39],
-	gray: [90, 39],
-
-	bgBlack: [40, 49],
-	bgRed: [41, 49],
-	bgGreen: [42, 49],
-	bgYellow: [43, 49],
-	bgBlue: [44, 49],
-	bgMagenta: [45, 49],
-	bgCyan: [46, 49],
-	bgWhite: [47, 49]
-};
-
-Object.keys(codes).forEach(function (key) {
-	var val = codes[key];
-	var style = styles[key] = {};
-	style.open = '\x1b[' + val[0] + 'm';
-	style.close = '\x1b[' + val[1] + 'm';
-});
-
-},{}],8:[function(require,module,exports){
+},{"ansi-styles":6,"has-color":8,"strip-ansi":11}],8:[function(require,module,exports){
 (function (process){
 'use strict';
 module.exports = (function () {
@@ -424,44 +427,72 @@ module.exports = (function () {
 })();
 
 }).call(this,require('_process'))
-},{"_process":10}],9:[function(require,module,exports){
-'use strict';
-module.exports = function (str) {
-	return typeof str === 'string' ? str.replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '') : str;
-};
-
-},{}],10:[function(require,module,exports){
+},{"_process":9}],9:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
 var queue = [];
 var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
 
 function drainQueue() {
     if (draining) {
         return;
     }
+    var timeout = setTimeout(cleanUpNextTick);
     draining = true;
-    var currentQueue;
+
     var len = queue.length;
     while(len) {
         currentQueue = queue;
         queue = [];
-        var i = -1;
-        while (++i < len) {
-            currentQueue[i]();
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
         }
+        queueIndex = -1;
         len = queue.length;
     }
+    currentQueue = null;
     draining = false;
+    clearTimeout(timeout);
 }
+
 process.nextTick = function (fun) {
-    queue.push(fun);
-    if (!draining) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
         setTimeout(drainQueue, 0);
     }
 };
 
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
 process.title = 'browser';
 process.browser = true;
 process.env = {};
@@ -483,16 +514,15 @@ process.binding = function (name) {
     throw new Error('process.binding is not supported');
 };
 
-// TODO(shtylman)
 process.cwd = function () { return '/' };
 process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /*
-	Class - JavaScript inheritance
+	PseudoClass - JavaScript inheritance
 
 	Construction:
 		Setup and construction should happen in the construct() method.
@@ -677,30 +707,30 @@ process.umask = function() { return 0; };
 	};
 
 	// The base Class implementation acts as extend alias, with the exception that it can take properties.extend as the Class to extend
-	var Class = function(properties) {
+	var PseudoClass = function(properties) {
 		// If a class-like object is passed as properties.extend, just call extend on it
 		if (properties && properties.extend)
 			return properties.extend.extend(properties);
 
 		// Otherwise, just create a new class with the passed properties
-		return Class.extend(properties);
+		return PseudoClass.extend(properties);
 	};
 	
-	// Add the mixin method to all classes created with Class
-	Class.prototype.mixin = mixin;
+	// Add the mixin method to all classes created with PseudoClass
+	PseudoClass.prototype.mixin = mixin;
 	
-	// Creates a new Class that inherits from this class
+	// Creates a new PseudoClass that inherits from this class
 	// Give the function a name so it can refer to itself without arguments.callee
-	Class.extend = function extend(properties) {
+	PseudoClass.extend = function extend(properties) {
 		// The constructor handles creating an instance of the class, applying mixins, and calling construct() and init() methods
-		function Class() {
+		function PseudoClass() {
 			// Optimization: Requiring the new keyword and avoiding usage of Object.create() increases performance by 5x
-			if (this instanceof Class === false) {
+			if (this instanceof PseudoClass === false) {
 				throw new Error('Cannot create instance without new operator');
 			}
 
 			// Set properties
-			var propertyDescriptors = Class.properties;
+			var propertyDescriptors = PseudoClass.properties;
 			if (propertyDescriptors) {
 				Object.defineProperties(this, propertyDescriptors);
 			}
@@ -717,19 +747,19 @@ process.umask = function() { return 0; };
 		// Store the superConstructor
 		// It will be accessible on an instance as follows:
 		//	instance.constructor.superConstructor
-		Class.superConstructor = superConstructor;
+		PseudoClass.superConstructor = superConstructor;
 
 		// Add extend() as a static method on the constructor
-		Class.extend = extend;
+		PseudoClass.extend = extend;
 
 		// Create an object with the prototype of the superclass
 		// Store the extended class' prototype as the prototype of the constructor
-		var prototype = Class.prototype = Object.create(superPrototype);
+		var prototype = PseudoClass.prototype = Object.create(superPrototype);
 
 		// Assign prototype.constructor to the constructor itself
 		// This allows instances to refer to this.constructor.prototype
 		// This also allows creation of new instances using instance.constructor()
-		prototype.constructor = Class;
+		prototype.constructor = PseudoClass;
 
 		// Store the superPrototype
 		// It will be accessible on an instance as follows:
@@ -757,7 +787,7 @@ process.umask = function() { return 0; };
 			}
 
 			// Define properties from this class and its parent classes
-			defineAndInheritProperties(Class, propertyDescriptors);
+			defineAndInheritProperties(PseudoClass, propertyDescriptors);
 
 			// Chain the construct() method (supermost executes first) if necessary
 			if (properties.construct) {
@@ -801,24 +831,35 @@ process.umask = function() { return 0; };
 		if (typeof prototype.init !== 'function')
 			prototype.init = noop;
 
-		return Class;
+		return PseudoClass;
 	};
 	
 	if (typeof module !== 'undefined' && module.exports) {
 		// Node.js Support
-		module.exports = Class;
+		module.exports = PseudoClass;
 	}
 	else if (typeof global.define === 'function') {
 		(function(define) {
 			// AMD Support
-			define(function() { return Class; });
+			define(function() { return PseudoClass; });
 		}(global.define));
 	}
 	else {
 		// Browser support
-		global.Class = global.PseudoClass = Class;
+		global.PseudoClass = PseudoClass;
+
+		// Don't blow away existing Class variable
+		if (!global.Class) {
+			global.Class = PseudoClass;
+		}
 	}
 }(this));
+
+},{}],11:[function(require,module,exports){
+'use strict';
+module.exports = function (str) {
+	return typeof str === 'string' ? str.replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '') : str;
+};
 
 },{}]},{},[1])(1)
 });
