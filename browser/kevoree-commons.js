@@ -68,14 +68,14 @@ var Bootstrapper = Class({
 
         // --- Resolvers callback
         var bootstrapper = this;
-        this.resolver.resolve(deployUnit, forceInstall, function (err, EntityClass, model) {
+        this.resolver.resolve(deployUnit, forceInstall, function (err, EntityClass) {
             if (err) {
                 bootstrapper.log.error(bootstrapper.toString(), err.stack);
-                return callback(new Error("'"+deployUnit.name+"' bootstrap failed!"));
+                return callback(new Error("'"+deployUnit.name+'@'+deployUnit.version+"' bootstrap failed!"));
             }
 
             // install success
-            callback(null, EntityClass, model);
+            callback(null, EntityClass);
         });
     },
 
@@ -89,7 +89,7 @@ var Bootstrapper = Class({
         this.resolver.uninstall(deployUnit, function (err) {
             if (err) {
                 bootstrapper.log.error(bootstrapper.toString(), err.stack);
-                callback(new Error("'"+deployUnit.name+"' uninstall failed!"));
+                callback(new Error("'"+deployUnit.name+'@'+deployUnit.version+"' uninstall failed!"));
                 return;
             }
 
@@ -100,6 +100,7 @@ var Bootstrapper = Class({
 });
 
 module.exports = Bootstrapper;
+
 },{"pseudoclass":10}],3:[function(require,module,exports){
 var Class = require('pseudoclass');
 
