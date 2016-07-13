@@ -217,12 +217,12 @@ var KevoreeLogger = Class({
     } else {
       this.level = level;
     }
-    console.log(getTime() + '  ' + chalkInfo('ALL ') + '   ' + processTag(this.toString()) + '  ' + chalkInfo('Set logLevel= ' + LEVELS[this.level]));
+    console.log(getTime() + '  ' + chalkInfo('ALL ') + '   ' + processTag(this.toString()) + '  ' + chalkInfo('Set logLevel=' + LEVELS[this.level]));
   },
 
   setFilter: function (filter) {
     this.filter = filter;
-    console.log(getTime() + '  ' + chalkInfo('ALL ') + '   ' + processTag(this.toString()) + '  ' + chalkInfo('Set logFilter= "' + this.filter + '"'));
+    console.log(getTime() + '  ' + chalkInfo('ALL ') + '   ' + processTag(this.toString()) + '  ' + chalkInfo('Set logFilter="' + this.filter + '"'));
   }
 });
 
