@@ -1,24 +1,16 @@
 {
   "name": "kevoree-commons",
-  "version": "2.1.2",
-  "homepage": "https://github.com/kevoree/kevoree-js-commons",
+  "description": "Kevoree Commons - Shared libraries/APIs",
+  "main": "browser/kevoree-commons.js",
   "authors": [
     "Maxime Tricoire <max.tricoire@gmail.com>"
   ],
-  "description": "Kevoree JavaScript commons - Shared libraries/APIs",
-  "main": "browser/kevoree-commons.js",
-  "moduleType": [
-    "node"
-  ],
+  "license": "LGPL-3.0",
   "keywords": [
     "kevoree",
-    "common",
-    "api",
-    "resolver",
-    "bootstrapper",
-    "logger"
+    "commons"
   ],
-  "license": "LGPL-3.0",
+  "homepage": "https://github.com/kevoree/kevoree-js-commons",
   "ignore": [
     "**/.*",
     "node_modules",

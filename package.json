@@ -1,11 +1,11 @@
 {
   "name": "kevoree-commons",
-  "version": "2.2.1",
+  "version": "3.0.0-alpha",
   "description": "Kevoree Commons - Shared libraries/APIs",
   "author": "Maxime Tricoire <max.tricoire@gmail.com>",
   "main": "./kevoree-commons.js",
   "scripts": {
-    "prepublish": "grunt"
+    "prepublish": "webpack --optimize-minimize"
   },
   "keywords": [
     "kevoree",
@@ -20,13 +20,11 @@
     "url": "https://github.com/kevoree/kevoree-js-commons"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-browserify": "^3.4.0"
+    "webpack": "^1.13.1"
   },
   "optionalDependencies": {},
   "dependencies": {
-    "chalk": "^0.4.0",
-    "pseudoclass": "^1.0.1"
+    "chalk": "^1.1.3"
   },
   "license": "LGPL-3.0"
 }
