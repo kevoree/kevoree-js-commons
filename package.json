@@ -5,7 +5,7 @@
   "author": "Maxime Tricoire <max.tricoire@gmail.com>",
   "main": "./kevoree-commons.js",
   "scripts": {
-    "prepublish": "webpack --optimize-minimize"
+    "prepublish": "grunt browserify:main"
   },
   "keywords": [
     "kevoree",
