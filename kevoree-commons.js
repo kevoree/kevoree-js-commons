@@ -1,3 +1,4 @@
-module.exports.Resolver      = require('./lib/Resolver');
-module.exports.Bootstrapper  = require('./lib/Bootstrapper');
-module.exports.KevoreeLogger = require('./lib/KevoreeLogger');
+exports.Resolver      = require('./lib/Resolver');
+exports.Bootstrapper  = require('./lib/Bootstrapper');
+exports.KevoreeLogger = require('./lib/Logger');
+exports.Logger        = exports.KevoreeLogger;
