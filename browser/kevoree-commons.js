@@ -68,9 +68,11 @@ Bootstrapper.prototype = {
     }
 
     // --- Resolvers callback
+    var self = this;
     this.resolver.resolve(deployUnit, forceInstall, function (err, EntityClass) {
       if (err) {
-        callback(new Error('Unable to install ' + deployUnit.name + '@' + deployUnit.version));
+        self.log.error(self.toString(), 'Unable to install ' + deployUnit.name + '@' + deployUnit.version);
+        callback(err);
       } else {
         // install success
         callback(null, EntityClass);
@@ -88,11 +90,11 @@ Bootstrapper.prototype = {
       throw new Error(this.toString()+'.uninstall() called without callback function');
     }
 
-    var bootstrapper = this;
+    var self = this;
     this.resolver.uninstall(deployUnit, function (err) {
       if (err) {
-        bootstrapper.log.error(bootstrapper.toString(), err.stack);
-        callback(new Error('\'' + deployUnit.name + '@' + deployUnit.version + '\' uninstall failed!'));
+        self.log.error(self.toString(), 'Unable to uninstall ' + deployUnit.name + '@' + deployUnit.version);
+        callback(err);
       } else {
         // uninstall success
         callback();
@@ -113,26 +115,27 @@ module.exports = Bootstrapper;
 var chalk = require('chalk');
 
 var LEVELS = ['all', 'debug', 'info', 'warn', 'error', 'quiet'];
+var CLASS = 15;
 
 var chalkInfo = chalk.grey,
-  chalkWarn = chalk.grey.bgYellow,
-  chalkWarnMsg = chalk.yellow,
-  chalkError = chalk.white.bgRed,
-  chalkErrorMsg = chalk.red,
+  chalkWarn = chalk.yellow,
+  chalkError = chalk.red,
   chalkDebug = chalk.cyan;
 
-function processTag(tag) {
-  if (tag.length >= 15) {
-    tag = tag.substr(0, 14) + '.';
+function truncate(str, length) {
+  str = str || '';
+
+  if (str.length >= length) {
+    str = str.substr(0, length - 1) + '.';
   } else {
     var spaces = '';
-    for (var i = 0; i < 15 - tag.length; i++) {
+    for (var i = 0; i < length - str.length; i++) {
       spaces += ' ';
     }
-    tag += spaces;
+    str += spaces;
   }
 
-  return chalk.magenta(tag);
+  return str;
 }
 
 function getTime() {
@@ -158,7 +161,7 @@ Logger.prototype = {
       }
 
       if (this.filter.length === 0 || (this.filter.length > 0 && tag === this.filter)) {
-        console.log(getTime() + '  ' + chalkInfo('INFO') + '   ' + processTag(tag) + '  ' + chalkInfo(msg));
+        console.log('%s %s %s', getTime(), chalk.magenta(truncate(tag, CLASS)), chalkInfo(msg));
       }
     }
   },
@@ -171,7 +174,7 @@ Logger.prototype = {
       }
 
       if (this.filter.length === 0 || (this.filter.length > 0 && tag === this.filter)) {
-        console.log(getTime() + '  ' + chalkDebug('DEBUG ') + ' ' + processTag(tag) + '  ' + chalkDebug(msg));
+        console.log('%s %s %s', getTime(), chalk.magenta(truncate(tag, CLASS)), chalkDebug(msg));
       }
     }
   },
@@ -184,7 +187,7 @@ Logger.prototype = {
       }
 
       if (this.filter.length === 0 || (this.filter.length > 0 && tag === this.filter)) {
-        console.warn(getTime() + '  ' + chalkWarn('WARN') + '   ' + processTag(tag) + '  ' + chalkWarnMsg(msg));
+        console.warn('%s %s %s', getTime(), chalk.magenta(truncate(tag, CLASS)), chalkWarn(msg));
       }
     }
   },
@@ -197,7 +200,7 @@ Logger.prototype = {
       }
 
       if (this.filter.length === 0 || (this.filter.length > 0 && tag === this.filter)) {
-        console.error(getTime() + '  ' + chalkError('ERROR') + '  ' + processTag(tag) + '  ' + chalkErrorMsg(msg));
+        console.error('%s %s %s', getTime(), chalk.magenta(truncate(tag, CLASS)), chalkError(msg));
       }
     }
   },
@@ -208,12 +211,12 @@ Logger.prototype = {
     } else {
       this.level = level;
     }
-    console.log(getTime() + '  ' + chalkInfo('ALL ') + '   ' + processTag(this.toString()) + '  ' + chalkInfo('Set logLevel=' + LEVELS[this.level]));
+    console.log('%s %s %s', getTime(), chalk.magenta(truncate('Logger', CLASS)), chalkInfo('Set logLevel=' + LEVELS[this.level]));
   },
 
   setFilter: function (filter) {
     this.filter = filter;
-    console.log(getTime() + '  ' + chalkInfo('ALL ') + '   ' + processTag(this.toString()) + '  ' + chalkInfo('Set logFilter="' + this.filter + '"'));
+    console.log('%s %s %s', getTime(), chalk.magenta(truncate('Logger', CLASS)), chalkInfo('Set logFilter=' + LEVELS[this.filter]));
   },
 
   toString: function () {
