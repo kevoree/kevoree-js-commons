@@ -1,6 +1,6 @@
 {
   "name": "kevoree-commons",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0",
   "description": "Kevoree Commons - Shared libraries/APIs",
   "author": "Maxime Tricoire <max.tricoire@gmail.com>",
   "main": "./kevoree-commons.js",
@@ -11,7 +11,6 @@
     "kevoree",
     "commons"
   ],
-  "contributors": [],
   "bugs": {
     "url": "https://github.com/kevoree/kevoree-js-commons/issues"
   },
