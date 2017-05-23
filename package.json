@@ -1,11 +1,12 @@
 {
   "name": "kevoree-commons",
-  "version": "3.0.0",
+  "version": "3.0.0-beta.2",
   "description": "Kevoree Commons - Shared libraries/APIs",
   "author": "Maxime Tricoire <max.tricoire@gmail.com>",
   "main": "./kevoree-commons.js",
   "scripts": {
-    "prepublish": "grunt browserify:main"
+    "build": "webpack",
+    "prepublish": "NODE_ENV=production webpack -p"
   },
   "keywords": [
     "kevoree",
@@ -19,8 +20,7 @@
     "url": "https://github.com/kevoree/kevoree-js-commons"
   },
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-browserify": "^5.0.0"
+    "webpack": "^2.6.0"
   },
   "optionalDependencies": {},
   "dependencies": {
